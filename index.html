@@ -1,1 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TextFusion Pro - GSAP Text Animation Tool</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;900&family=Roboto:wght@300;400;500;700;900&family=Montserrat:wght@300;400;500;700;900&family=Fira+Code:wght@400;500&family=Playfair+Display:wght@400;700&family=Abril+Fatface&family=Bebas+Neue&display=swap" rel="stylesheet">
+  
+  <!-- GSAP and SplitType CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/CustomEase.min.js"></script>
+  <script src="https://unpkg.com/split-type"></script>
 
+  <!-- Add these lines in the <head> section of your HTML file -->
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+  
+</head>
+<body>
+  <div class="container">
+    <!-- Top Navbar -->
+    <nav class="navbar">
+      <div class="logo">
+        <span class="logo-text">TextFusion Pro</span>
+        <span class="logo-version">3.0</span>
+      </div>
+      <div class="tabs-container">
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="animator">Animator</button>
+          <button class="tab-btn" data-tab="help">Help</button>
+          <button class="tab-btn" data-tab="about">About</button>
+        </div>
+      </div>
+      <div class="navbar-buttons">
+        <button id="random-btn" class="action-btn tooltip" data-tooltip="Generate random animation">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 4l3 3-3 3"></path>
+            <path d="M21 7H7a4 4 0 100 8h8"></path>
+            <path d="M18 20l3-3-3-3"></path>
+            <path d="M21 17H3"></path>
+          </svg>
+          <span>Random</span>
+        </button>
+        <button id="reset-btn" class="action-btn tooltip" data-tooltip="Reset all settings">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 12a9 9 0 1018 0 9 9 0 00-18 0z"></path>
+            <path d="M12 8v4l3 3"></path>
+          </svg>
+          <span>Reset</span>
+        </button>
+        <button id="export-btn" class="primary-btn tooltip" data-tooltip="Export animation">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span>Export</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Animator Tab Content -->
+    <div class="tab-content active" id="animator-tab">
+      <div class="main-content">
+        <!-- Collapsible Sidebar -->
+        <button id="sidebar-toggle" class="sidebar-toggle">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        
+        <!-- Sidebar with Controls -->
+        <aside id="sidebar" class="sidebar">
+          <div class="sidebar-header">
+            <h2>Animation Controls</h2>
+          </div>
+          
+          <!-- Content Section -->
+          <div class="sidebar-section">
+            <div class="section-header">
+              <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path>
+              </svg>
+              <h3>Content</h3>
+            </div>
+            
+            <div class="control-group">
+              <label for="custom-text">Custom Text</label>
+              <input type="text" id="custom-text" class="input-field" value="Welcome to the Future">
+            </div>
+            
+            <!-- Text styling controls -->
+            <div class="control-group">
+              <label>Text Style</label>
+              <div class="font-controls">
+                <button class="font-control-btn tooltip active" id="bold-btn" data-tooltip="Bold">B</button>
+                <button class="font-control-btn tooltip" id="italic-btn" data-tooltip="Italic">I</button>
+                <button class="font-control-btn tooltip" id="underline-btn" data-tooltip="Underline">U</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Animation Section -->
+          <div class="sidebar-section">
+            <div class="section-header">
+              <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14"></path>
+                <path d="M12 5v14"></path>
+                <path d="M5 5l14 14"></path>
+              </svg>
+              <h3>Animation Settings</h3>
+            </div>
+            
+            <div class="control-group">
+              <label for="animation-select">Animation Type</label>
+              <select id="animation-select" class="input-field">
+                <option value="fade-in">Fade In</option>
+                <option value="stagger">Stagger In</option>
+                <option value="stagger-mix">Stagger Mix</option>
+                <option value="slide-up">Slide Up</option>
+                <option value="scale-up">Scale Up</option>
+                <option value="rotate">Rotate</option>
+                <option value="glitch">Glitch</option>
+                <option value="distortion">Distortion</option>
+                <option value="neon-pulse">Neon Pulse</option>
+                <option value="wave-reveal">Wave Reveal</option>
+                <option value="blur-in">Blur In</option>
+                <option value="bounce">Bounce</option>
+                <option value="split-merge">Split & Merge</option>
+                <option value="typewriter">Typewriter</option>
+                <option value="elastic">Elastic</option>
+                <option value="circular-reveal">Circular Reveal</option>
+                <option value="wipe-left-right">Wipe Left to Right</option>
+                <option value="letter-shuffle">Letter Shuffle</option>
+                <option value="character-rotation">Character Rotation</option>
+              </select>
+            </div>
+
+            <div class="control-group">
+              <label for="split-type">Split Type</label>
+              <div class="split-controls">
+                <button id="split-chars" class="split-btn active">Chars</button>
+                <button id="split-words" class="split-btn">Words</button>
+                <button id="split-lines" class="split-btn">Lines</button>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label for="stagger-order">Stagger Order</label>
+              <select id="stagger-order" class="input-field">
+                <option value="default">Left to Right</option>
+                <option value="right">Right to Left</option>
+                <option value="center">From Center</option>
+                <option value="edges">From Edges</option>
+                <option value="random">Random</option>
+              </select>
+            </div>
+
+            <div class="control-group">
+              <label for="speed-slider">
+                <span>Speed</span>
+                <span class="value-display" id="speed-value">1.0</span>
+              </label>
+              <input type="range" id="speed-slider" class="slider-input" min="0.2" max="3" step="0.1" value="1">
+            </div>
+
+            <div class="control-group">
+              <label for="delay-slider">
+                <span>Stagger Delay</span>
+                <span class="value-display" id="delay-value">0.05</span>
+              </label>
+              <input type="range" id="delay-slider" class="slider-input" min="0.01" max="0.3" step="0.01" value="0.05">
+            </div>
+
+            <div class="control-group">
+              <label for="ease-select">Easing</label>
+              <select id="ease-select" class="input-field">
+                <option value="power2.out">Power 2 (Out)</option>
+                <option value="power3.out">Power 3 (Out)</option>
+                <option value="power4.out">Power 4 (Out)</option>
+                <option value="back.out(1.7)">Back Out</option>
+                <option value="elastic.out(1, 0.3)">Elastic</option>
+                <option value="bounce.out">Bounce</option>
+                <option value="sine.inOut">Sine (In-Out)</option>
+                <option value="steps(5)">Steps (5)</option>
+                <option value="circ.out">Circ (Out)</option>
+                <option value="expo.out">Expo (Out)</option>
+                <option value="custom">Custom</option>
+              </select>
+              <div class="ease-visualization">
+                <svg width="100%" height="100%" viewBox="0 0 200 200" preserveAspectRatio="none">
+                  <path id="ease-path" class="ease-path" d="M0,200 C40,120 160,80 200,0" />
+                </svg>
+                <div id="ease-dot" class="ease-dot"></div>
+                <div id="ease-handle-1" class="ease-handle" style="left: 40px; top: 120px;"></div>
+                <div id="ease-handle-2" class="ease-handle" style="left: 160px; top: 80px;"></div>
+              </div>
+            </div>
+            
+            <!-- Mask settings -->
+            <div class="control-group mask-controls">
+              <label for="use-mask">
+                <span>Use Text Mask</span>
+                <label class="switch">
+                  <input type="checkbox" id="use-mask" class="checkbox-input">
+                  <span class="switch-slider"></span>
+                </label>
+              </label>
+            </div>
+            
+            <div class="control-group mask-options" style="display: none;">
+              <label for="mask-type-select">Mask Type</label>
+              <select id="mask-type-select" class="input-field">
+                <option value="circle">Circle</option>
+                <option value="wipe-right">Wipe Right</option>
+                <option value="wipe-left">Wipe Left</option>
+                <option value="wipe-up">Wipe Up</option>
+                <option value="wipe-down">Wipe Down</option>
+                <option value="custom">Custom Path</option>
+              </select>
+              
+              <div id="custom-mask-controls" style="display: none; margin-top: 10px;">
+                <label for="custom-svg-path">Custom SVG Path</label>
+                <textarea id="custom-svg-path" class="input-field" rows="3" placeholder="M0,0 L100,0 L100,100 L0,100 Z"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Text Styling Section -->
+          <div class="sidebar-section">
+            <div class="section-header">
+              <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 7V4h16v3"></path>
+                <path d="M9 20h6"></path>
+                <path d="M12 4v16"></path>
+              </svg>
+              <h3>Text Styling</h3>
+            </div>
+            
+            <div class="control-group">
+              <label for="font-size">
+                <span>Font Size</span>
+                <span class="value-display" id="font-size-value">48px</span>
+              </label>
+              <input type="range" id="font-size" class="slider-input" min="20" max="100" step="1" value="48">
+            </div>
+
+            <div class="control-group">
+              <label for="font-select">Font Family</label>
+              <select id="font-select" class="input-field font-select">
+                <option value="'Poppins', sans-serif" style="font-family: 'Poppins', sans-serif;">Poppins</option>
+                <option value="'Roboto', sans-serif" style="font-family: 'Roboto', sans-serif;">Roboto</option>
+                <option value="'Montserrat', sans-serif" style="font-family: 'Montserrat', sans-serif;">Montserrat</option>
+                <option value="'Arial', sans-serif" style="font-family: Arial, sans-serif;">Arial</option>
+                <option value="'Georgia', serif" style="font-family: Georgia, serif;">Georgia</option>
+                <option value="'Playfair Display', serif" style="font-family: 'Playfair Display', serif;">Playfair Display</option>
+                <option value="'Abril Fatface', cursive" style="font-family: 'Abril Fatface', cursive;">Abril Fatface</option>
+                <option value="'Bebas Neue', sans-serif" style="font-family: 'Bebas Neue', sans-serif;">Bebas Neue</option>
+              </select>
+            </div>
+
+            <div class="control-group">
+              <label for="text-color">Text Color</label>
+              <div class="color-fields">
+                <div class="color-picker-wrapper">
+                  <input type="color" id="text-color" value="#ffffff" class="color-picker">
+                </div>
+                <input type="text" id="color-text-value" class="color-text input-field" value="#ffffff" readonly>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label for="letter-spacing">
+                <span>Letter Spacing</span>
+                <span class="value-display" id="spacing-value">0px</span>
+              </label>
+              <input type="range" id="letter-spacing" class="slider-input" min="0" max="15" step="0.5" value="0">
+            </div>
+
+            <div class="control-group">
+              <label for="text-weight">Font Weight</label>
+              <select id="text-weight" class="input-field">
+                <option value="400">Regular (400)</option>
+                <option value="500">Medium (500)</option>
+                <option value="700" selected>Bold (700)</option>
+                <option value="900">Black (900)</option>
+              </select>
+            </div>
+
+            <div class="control-group">
+              <label for="text-transform">Text Transform</label>
+              <select id="text-transform" class="input-field">
+                <option value="none">Normal</option>
+                <option value="uppercase" selected>UPPERCASE</option>
+                <option value="lowercase">lowercase</option>
+                <option value="capitalize">Capitalize</option>
+              </select>
+            </div>
+
+            <div class="control-group">
+              <label for="text-shadow">
+                <span>Text Shadow</span>
+                <span class="value-display" id="shadow-value">0px</span>
+              </label>
+              <input type="range" id="text-shadow" class="slider-input" min="0" max="20" step="1" value="0">
+            </div>
+          </div>
+
+          <!-- Advanced Settings -->
+          <div class="sidebar-section">
+            <div class="section-header">
+              <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 20h9"></path>
+                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+              </svg>
+              <h3>Advanced Settings</h3>
+            </div>
+            
+            <div class="advanced-toggle">
+              <span>Advanced Options</span>
+              <svg class="advanced-toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </div>
+            
+            <div class="advanced-options">
+              <div class="control-group">
+                <label for="offset-y">
+                  <span>Y Offset</span>
+                  <span class="value-display" id="offset-y-value">30px</span>
+                </label>
+                <input type="range" id="offset-y" class="slider-input" min="-100" max="100" step="5" value="30">
+              </div>
+
+              <div class="control-group">
+                <label for="offset-x">
+                  <span>X Offset</span>
+                  <span class="value-display" id="offset-x-value">0px</span>
+                </label>
+                <input type="range" id="offset-x" class="slider-input" min="-100" max="100" step="5" value="0">
+              </div>
+
+              <div class="control-group">
+                <label for="rotation">
+                  <span>Rotation</span>
+                  <span class="value-display" id="rotation-value">0°</span>
+                </label>
+                <input type="range" id="rotation" class="slider-input" min="-180" max="180" step="5" value="0">
+              </div>
+
+              <div class="control-group">
+                <label for="use-3d">
+                  <span>Use 3D Transforms</span>
+                  <label class="switch">
+                    <input type="checkbox" id="use-3d" class="checkbox-input">
+                    <span class="switch-slider"></span>
+                  </label>
+                </label>
+              </div>
+
+              <div class="control-group">
+                <label for="use-multi-color">
+                  <span>Multiple Colors</span>
+                  <label class="switch">
+                    <input type="checkbox" id="use-multi-color" class="checkbox-input">
+                    <span class="switch-slider"></span>
+                  </label>
+                </label>
+              </div>
+
+              <div class="control-group">
+                <label for="iterations">
+                  <span>Repeat Count</span>
+                  <span class="value-display" id="iterations-value">0</span>
+                </label>
+                <input type="range" id="iterations" class="slider-input" min="0" max="10" step="1" value="0">
+              </div>
+
+              <div class="control-group">
+                <label for="blur-effect">
+                  <span>Blur Effect</span>
+                  <span class="value-display" id="blur-value">3px</span>
+                </label>
+                <input type="range" id="blur-effect" class="slider-input" min="0" max="20" step="1" value="3">
+              </div>
+
+              <div class="control-group">
+                <label for="scale-effect">
+                  <span>Scale Effect</span>
+                  <span class="value-display" id="scale-value">1.0</span>
+                </label>
+                <input type="range" id="scale-effect" class="slider-input" min="0" max="2" step="0.1" value="1.0">
+              </div>
+
+              <div class="control-group">
+                <label for="particles-effect">
+                  <span>Particles Effect</span>
+                  <label class="switch">
+                    <input type="checkbox" id="particles-effect" class="checkbox-input">
+                    <span class="switch-slider"></span>
+                  </label>
+                </label>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Preview Area (Centered as main focus) -->
+        <main class="preview-area">
+          <!-- Preview Canvas -->
+          <div class="preview-container">
+            <div class="preview-controls">
+              <div class="device-selector">
+                <button id="device-desktop" class="device-btn active" data-device="desktop" data-tooltip="Desktop view">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                    <line x1="8" y1="21" x2="16" y2="21"></line>
+                    <line x1="12" y1="17" x2="12" y2="21"></line>
+                  </svg>
+                </button>
+                <button id="device-tablet" class="device-btn" data-device="tablet" data-tooltip="Tablet view">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+                    <line x1="12" y1="18" x2="12" y2="18"></line>
+                  </svg>
+                </button>
+                <button id="device-mobile" class="device-btn" data-device="mobile" data-tooltip="Mobile view">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                    <line x1="12" y1="18" x2="12" y2="18"></line>
+                  </svg>
+                </button>
+              </div>
+              
+              <div class="preview-actions">
+                <button id="play-btn" class="flat-btn tooltip" data-tooltip="Play Animation">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                  </svg>
+                  Play
+                </button>
+              </div>
+            </div>
+
+            <div id="preview" class="preview-section">
+              <h2 class="preview-text">Welcome to the Future</h2>
+              <div class="timeline-scrubber">
+                <input type="range" id="timeline-slider" min="0" max="100" step="1" value="0">
+                <div class="timeline-controls">
+                  <button id="timeline-play" class="timeline-btn" data-tooltip="Play">
+                    <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                  </button>
+                  <button id="timeline-pause" class="timeline-btn" data-tooltip="Pause">
+                    <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="6" y="4" width="4" height="16"></rect>
+                      <rect x="14" y="4" width="4" height="16"></rect>
+                    </svg>
+                  </button>
+                  <button id="timeline-reset" class="timeline-btn" data-tooltip="Reset">
+                    <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M1 4v6h6"></path>
+                      <path d="M3.51 15a9 9 0 102.13-9.36L1 10"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Code Section -->
+          <section class="code-section">
+            <div class="code-header">
+              <h3>Generated JavaScript</h3>
+              <div class="code-format-selector">
+                <button id="copy-btn" class="flat-btn tooltip" data-tooltip="Copy to clipboard">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+                    <path d="M16 8V6a2 2 0 00-2-2H6a2 2 0 00-2 2v10a2 2 0 002 2h2"></path>
+                  </svg>
+                  Copy Code
+                </button>
+              </div>
+            </div>
+            <div class="code-container">
+              <pre id="code-output"><code></code></pre>
+              <div id="code-copy-msg" class="code-copy-msg">Copied to clipboard!</div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <!-- Help Tab Content -->
+    <div class="tab-content" id="help-tab">
+      <div class="content-container">
+        <h1>How to Use TextFusion Pro</h1>
+        <p>This text animation generator creates professional GSAP animations. Here's how to use it:</p>
+        
+        <div class="help-section">
+          <h2>Basic Controls</h2>
+          <ul>
+            <li><strong>Custom Text:</strong> Enter the text you want to animate</li>
+            <li><strong>Text Style:</strong> Apply bold, italic, or underline formatting</li>
+          </ul>
+        </div>
+
+        <div class="help-section">
+          <h2>Animation Settings</h2>
+          <ul>
+            <li><strong>Animation Type:</strong> Choose from various animation effects</li>
+            <li><strong>Split Type:</strong> Break text into characters, words, or lines</li>
+            <li><strong>Stagger Order:</strong> Control how animations sequence</li>
+            <li><strong>Speed:</strong> Adjust overall animation duration</li>
+            <li><strong>Stagger Delay:</strong> Time between each element's animation</li>
+            <li><strong>Easing:</strong> Control animation timing functions
+              <ul>
+                <li>Select "Custom" to create your own easing curve using the handles</li>
+              </ul>
+            </li>
+            <li><strong>Text Mask:</strong> Apply reveal effects to your text</li>
+          </ul>
+        </div>
+
+        <div class="help-section">
+          <h2>Text Styling</h2>
+          <ul>
+            <li><strong>Font Size:</strong> Change text size</li>
+            <li><strong>Font Family:</strong> Select typeface</li>
+            <li><strong>Text Color:</strong> Customize color</li>
+            <li><strong>Letter Spacing:</strong> Adjust space between characters</li>
+            <li><strong>Font Weight:</strong> Control text thickness</li>
+            <li><strong>Text Transform:</strong> Apply uppercase, lowercase, etc.</li>
+            <li><strong>Text Shadow:</strong> Add glow or shadow effects</li>
+          </ul>
+        </div>
+
+        <div class="help-section">
+          <h2>Advanced Settings</h2>
+          <ul>
+            <li><strong>Y/X Offset:</strong> Starting position for animations</li>
+            <li><strong>Rotation:</strong> Spin elements during animation</li>
+            <li><strong>3D Transforms:</strong> Enable perspective effects</li>
+            <li><strong>Multiple Colors:</strong> Apply random colors to text</li>
+            <li><strong>Repeat Count:</strong> Number of animation loops</li>
+            <li><strong>Blur Effect:</strong> Add motion blur</li>
+            <li><strong>Scale Effect:</strong> Size change during animation</li>
+            <li><strong>Particles Effect:</strong> Create exploding text effects</li>
+          </ul>
+        </div>
+
+        <div class="help-section">
+          <h2>Preview Controls</h2>
+          <ul>
+            <li><strong>Device Options:</strong> Test animations at different screen sizes</li>
+            <li><strong>Play Button:</strong> Run the animation</li>
+            <li><strong>Timeline Scrubber:</strong> Manually control animation progress</li>
+            <li><strong>Play/Pause/Reset:</strong> Control animation playback</li>
+          </ul>
+        </div>
+
+        <div class="help-section">
+          <h2>Exporting Animations</h2>
+          <ul>
+            <li><strong>Generated JavaScript:</strong> Ready-to-use GSAP code</li>
+            <li><strong>Copy Code:</strong> Copy to clipboard for use in your projects</li>
+            <li><strong>Export:</strong> Download the animation code</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- About Tab Content -->
+    <div class="tab-content" id="about-tab">
+      <div class="content-container">
+        <h1>About TextFusion Pro</h1>
+        
+        <div class="about-section">
+          <h2>What is TextFusion Pro?</h2>
+          <p>TextFusion Pro is a powerful text animation generator that helps designers and developers create stunning text animations using GSAP (GreenSock Animation Platform). It provides an intuitive interface to design complex animations without writing code, then generates the JavaScript needed to implement them in your projects.</p>
+        </div>
+        
+        <div class="about-section">
+          <h2>Features</h2>
+          <ul>
+            <li>19 different animation types</li>
+            <li>Character, word, and line-based animations</li>
+            <li>Custom easing with visual editor</li>
+            <li>Text masking and reveal effects</li>
+            <li>3D transformations</li>
+            <li>Timeline scrubbing and precise control</li>
+            <li>Multiple device preview</li>
+            <li>Code generation for easy implementation</li>
+          </ul>
+        </div>
+        
+        <div class="about-section">
+          <h2>Technologies</h2>
+          <p>TextFusion Pro is built with:</p>
+          <ul>
+            <li>GSAP (GreenSock Animation Platform)</li>
+            <li>SplitType for text splitting</li>
+            <li>Modern HTML, CSS, and JavaScript</li>
+          </ul>
+        </div>
+        
+        <div class="about-section">
+          <h2>Use Cases</h2>
+          <p>Perfect for:</p>
+          <ul>
+            <li>Website headers and hero sections</li>
+            <li>Interactive user interfaces</li>
+            <li>Landing pages</li>
+            <li>Digital presentations</li>
+            <li>Motion graphics</li>
+            <li>Educational content about animation</li>
+          </ul>
+        </div>
+        
+        <div class="about-section credits">
+          <h2>Credits</h2>
+          <p>Created with ❤️ by <a href="https://www.enricodeiana.design/" target="_blank">Enrico Deiana</a></p>
+          <p>GSAP is a registered trademark of GreenSock, LLC.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast">Code copied to clipboard!</div>
+  
+  <!-- Footer -->
+  <footer class="footer">
+    <p>Created with ❤️ by <a href="https://www.enricodeiana.design/" target="_blank">Enrico Deiana</a> • TextFusion Pro 3.0</p>
+  </footer>
+</body>
+</html>
